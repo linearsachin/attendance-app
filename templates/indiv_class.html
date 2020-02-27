@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+         
+            <h3>{{class.branch}} {{class.divison}}</h3>
+            academic year : {{class.academic_year}}<br>
+            semester : {{class.semester}}<br>
+            students:
+            {% for attendance in attendances.all  %}<ol>
+            
+
+                <li>{{attendance.student.first_name}} {{attendance.student.last_name}} {{attendance.student.roll_no}} 
+                {% for sub in attendance.attendance.all %}<br>
+                    {% if sub.subject.pk == subject_pk %}
+                        {{sub.subject.subject_abbr}} {{sub.attendance}}<br>
+                    {% endif %}
+                {% endfor %}
+                </li>
+
+   

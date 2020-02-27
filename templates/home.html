@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+        <h1>{{teacher.first_name}} {{teacher.last_name}}</h1>
+        {% for subject in detail %}
+            subject:{{subject.subject.subject_name}}<br>
+            <h2>class:</h2>
+                {% for class in subject.classes.all  %}
+                    <h3>{{class.branch}} {{class.divison}}</h3>
+                    academic year : {{class.academic_year}}<br>
+                    semester : {{class.semester}}<br>
+                    <br> <a href = "{% url "class" pk=class.pk subject_pk=subject.pk %}"> view detailed </a>
+                {% endfor %}<br>
+
+        {% endfor %}
+{% endblock content %}
+
