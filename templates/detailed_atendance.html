@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+
+                <table class="table table-bordered">
+                    <tr>
+                        <th>Firstname</th>
+                        <th>Lastname</th>
+                        <th>Roll No</th>
+                        {% for time in last_attendance.detailed_attendance.all %}
+                                <th>{{time.timestamp.date}}</th>
+                        {% endfor %}
+
+                    </tr>
+            {% for student in attendance %}
+                  
+                <tr>
+                    <td>{{student.student.first_name}}</td>
+                    <td>{{student.student.last_name}}</td>
+                    <td>{{student.student.roll_no}}</td>
+                
+                    
+                    {% for day in student.detailed_attendance.all  %}
+                            {% if day.present %}
+                                <td>Present</td>
+                            {% else %}
+                                <td>Absent</td>
+                            {% endif %}
+                    {% endfor %}
+                </tr> 
+            
+            {% endfor %}
+
+                </table>
+
+
+{% endblock content %}

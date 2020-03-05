@@ -1,1 +1,20 @@
 {% extends 'base.html' %}
+{% block content %}
+<h5>select absent students only</h5>
+            <h3>{{class.branch}} {{class.divison}}</h3>
+            <h3>{{subject.subject_name}}</h3>
+            academic year : {{class.academic_year}}<br>
+            semester : {{class.semester}}<br>
+            students:
+            <form method="POST" class="form-control">
+                {% csrf_token %}
+                <label name="subject_pk" value="{{ subject.pk}}"></label><br> 
+                {% for student in students  %}
+                    <input name="attendance-absent-set" type="checkbox" value="{{ student.student.pk }}" id="attendance" >
+                        <label>{{student.student.first_name}}</label><br> 
+                    </input>
+                {% endfor %}
+                <button type="submit">submit</button>
+           </form>
+    
+{% endblock content %}

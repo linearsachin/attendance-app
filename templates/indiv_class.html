@@ -1,19 +1,37 @@
 {% extends 'base.html' %}
 {% block content %}
-         
+            <a href={% url "detailed-attendance" class.pk subject_pk %}>Detailed Attendance</a>
             <h3>{{class.branch}} {{class.divison}}</h3>
+            <h3>{{subject.subject_name}}</h3>
             academic year : {{class.academic_year}}<br>
             semester : {{class.semester}}<br>
             students:
-            {% for attendance in attendances.all  %}<ol>
+           
             
+                <table class="table table-bordered">
+                    <tr>
+                        <th>Firstname</th>
+                        <th>Lastname</th>
+                        <th>Roll No</th>
+                        <th>Attendance</th>
 
-                <li>{{attendance.student.first_name}} {{attendance.student.last_name}} {{attendance.student.roll_no}} 
-                {% for sub in attendance.attendance.all %}<br>
-                    {% if sub.subject.pk == subject_pk %}
-                        {{sub.subject.subject_abbr}} {{sub.attendance}}<br>
-                    {% endif %}
-                {% endfor %}
-                </li>
+                    </tr>
+            {% for attendance in attendances.all  %}
+                    <tr>
+                        
+                        <td>{{attendance.student.first_name}}</td>
+                        <td>{{attendance.student.last_name}}</td>
+                        <td>{{attendance.student.roll_no}} </td>                
+                        <td>
+                        
+                        {% for sub in attendance.attendance.all %}
+                            {% if  sub.subject.pk == subject_pk %}
+                                {{sub.attendance}}<br>
+                            {% endif %}
+                        {% endfor %}
+                        </td>
+                        </tr>
+            {% endfor %}
 
-   
+           
+{% endblock content %}

@@ -7,10 +7,13 @@
             subject:{{subject.subject.subject_name}}<br>
             <h2>class:</h2>
                 {% for class in subject.classes.all  %}
+
                     <h3>{{class.branch}} {{class.divison}}</h3>
                     academic year : {{class.academic_year}}<br>
                     semester : {{class.semester}}<br>
-                    <br> <a href = "{% url "class" pk=class.pk subject_pk=subject.pk %}"> view detailed </a>
+                    
+                    <br> <a href = "{% url "class" pk=class.pk subject_pk=subject.subject.pk %}"> view detailed </a>
+                    <br> <a href = "{% url "mark-attendance" pk=class.pk subject_pk=subject.subject.pk %}"> mark attendance </a>
                 {% endfor %}<br>
 
         {% endfor %}

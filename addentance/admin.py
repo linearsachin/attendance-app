@@ -9,6 +9,7 @@ Class,
 Teacher,
 Student_Attendance,
 Teacher_Detail,
+AttendanceTimestamp,
 )
 admin.site.register(Branch)
 admin.site.register(Subject)
@@ -18,3 +19,4 @@ admin.site.register(Class)
 admin.site.register(Teacher)
 admin.site.register(Student_Attendance)
 admin.site.register(Teacher_Detail)
+admin.site.register(AttendanceTimestamp)

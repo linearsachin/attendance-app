@@ -48,12 +48,22 @@ class Teacher_Detail(models.Model):
     def __str__(self):
         return f"{self.teacher.faculty_id} for {self.subject.subject_name}"
 
+class AttendanceTimestamp(models.Model):
+    student  = models.ForeignKey('Student',on_delete=models.CASCADE,blank=True, null=True)
+    subject = models.ForeignKey('Subject',on_delete=models.CASCADE,blank=True, null=True)
+    present = models.BooleanField()
+    timestamp = models.DateTimeField()
+
+    def __str__(self):
+        return f"{self.student} for {self.subject.subject_name} on {self.timestamp}"
+    
 
 
 class Attendance(models.Model):
     student  = models.ForeignKey('Student',on_delete=models.CASCADE,blank=True, null=True)
     subject = models.ForeignKey('Subject',on_delete=models.CASCADE,blank=True, null=True)
-    attended = models.IntegerField(default=0)
+    detailed_attendance = models.ManyToManyField('AttendanceTimestamp')
+    not_attended = models.IntegerField(default=0)
     total = models.IntegerField(default=0)
 
     def __str__(self):
@@ -61,7 +71,7 @@ class Attendance(models.Model):
 
     def attendance(self):
         try:
-            attendance = ( self.attended / self.total )* 100 
+            attendance = ( (self.total - self.not_attended) / self.total )* 100 
 
         except :
             attendance=0
