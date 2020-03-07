@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
-
+                <a href="{% url 'export_users_csv' class_pk=class.pk subject_pk=subject.pk %}">Export all users</a>
                 <table class="table table-bordered">
                     <tr>
                         <th>Firstname</th>
                         <th>Lastname</th>
                         <th>Roll No</th>
                         {% for time in last_attendance.detailed_attendance.all %}
-                                <th>{{time.timestamp.date}}</th>
+                                <th>{{time.timestamp}}</th>
                         {% endfor %}
 
                     </tr>

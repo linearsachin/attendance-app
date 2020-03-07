@@ -3,7 +3,9 @@
 {% block content %}
 
         <h1>{{teacher.first_name}} {{teacher.last_name}}</h1>
-        {% for subject in detail %}
+       
+        {% for subject in detail %} 
+        <div class="card">
             subject:{{subject.subject.subject_name}}<br>
             <h2>class:</h2>
                 {% for class in subject.classes.all  %}
@@ -15,7 +17,8 @@
                     <br> <a href = "{% url "class" pk=class.pk subject_pk=subject.subject.pk %}"> view detailed </a>
                     <br> <a href = "{% url "mark-attendance" pk=class.pk subject_pk=subject.subject.pk %}"> mark attendance </a>
                 {% endfor %}<br>
-
+        </div>
         {% endfor %}
+        
 {% endblock content %}
 

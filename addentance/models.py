@@ -62,7 +62,7 @@ class AttendanceTimestamp(models.Model):
 class Attendance(models.Model):
     student  = models.ForeignKey('Student',on_delete=models.CASCADE,blank=True, null=True)
     subject = models.ForeignKey('Subject',on_delete=models.CASCADE,blank=True, null=True)
-    detailed_attendance = models.ManyToManyField('AttendanceTimestamp')
+    detailed_attendance = models.ManyToManyField('AttendanceTimestamp',blank=True)
     not_attended = models.IntegerField(default=0)
     total = models.IntegerField(default=0)
 
