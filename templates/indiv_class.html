@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
             <a href={% url "detailed-attendance" class.pk subject_pk %}>Detailed Attendance</a>
+            <a href={% url "defaulter-list" class.pk subject_pk %}>Get Defaulter List</a>
             <h3>{{class.branch}} {{class.divison}}</h3>
             <h3>{{subject.subject_name}}</h3>
             academic year : {{class.academic_year}}<br>

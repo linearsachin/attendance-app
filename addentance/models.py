@@ -51,7 +51,7 @@ class Teacher_Detail(models.Model):
 class AttendanceTimestamp(models.Model):
     student  = models.ForeignKey('Student',on_delete=models.CASCADE,blank=True, null=True)
     subject = models.ForeignKey('Subject',on_delete=models.CASCADE,blank=True, null=True)
-    present = models.BooleanField()
+    present = models.BooleanField(default=True)
     timestamp = models.DateTimeField()
 
     def __str__(self):
@@ -76,6 +76,13 @@ class Attendance(models.Model):
         except :
             attendance=0
         return round(attendance,2)
+    
+    def is_defaulter(self):
+        if ( (self.total - self.not_attended) / self.total )* 100  < 75:
+            return True
+        else:
+            return False
+
 
 class Student_Attendance(models.Model):
     student = models.ForeignKey('Student',on_delete=models.CASCADE,blank=True, null=True)

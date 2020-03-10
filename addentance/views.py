@@ -88,10 +88,10 @@ class MarkAttendanceView(View):
         lecture_date = request.POST.get('lecture-date')
         lecture_time = request.POST.get('lecture-time')
         lecture_datetime1 = lecture_date + ' '+ lecture_time
-        lecture_datetime=datetime.datetime.strptime(lecture_datetime1,'%Y-%m-%d %H:%M').astimezone(pytz.timezone('Asia/Kolkata'))
-        print(type(lecture_datetime))
+        lecture_datetime=datetime.datetime.strptime(lecture_datetime1,'%Y-%m-%d %H:%M')
         subject = Subject.objects.get(pk=subject_pk)
         for student_pk in lists:
+
             student = Student.objects.get(pk = student_pk)
             AttendanceTimestamp.objects.create(
                 student = student,
@@ -99,11 +99,12 @@ class MarkAttendanceView(View):
                 present  = False,
                 timestamp = (lecture_datetime),
             )
-            attendtime = AttendanceTimestamp.objects.filter(
+            attendtime = AttendanceTimestamp.objects.get(
                 student = student,
                 subject= subject,
-                present  = False,
-            ).order_by('-timestamp')[0]
+                timestamp = (lecture_datetime),
+
+            )
             attend = Attendance.objects.get(student= student,subject=subject)
             attend.detailed_attendance.add(attendtime)
             attend.total += 1
@@ -114,22 +115,21 @@ class MarkAttendanceView(View):
                 AttendanceTimestamp.objects.create(
                 student = student,
                 subject= subject,
-                present  = True,
                 timestamp = (lecture_datetime),
                 )
-                attendtime = AttendanceTimestamp.objects.filter(
+                attendtime = AttendanceTimestamp.objects.get(
                 student = student,
                 subject= subject,
-                present  = True,
-                ).order_by('-timestamp')
+                timestamp = (lecture_datetime)
+                )
                 attend = Attendance.objects.get(student= student,subject=subject)
-                attend.detailed_attendance.add(attendtime[0])
+                attend.detailed_attendance.add(attendtime)
                 attend.total += 1
                 attend.save()
 
         
             
-        return redirect('home')
+        return redirect('detailed-attendance',pk,subject_pk )
  
 
 class DetailedAttendance(View):
@@ -140,7 +140,6 @@ class DetailedAttendance(View):
         for student in class_.students.all():
             attend = Attendance.objects.get(student =student,subject=subject)
             attendances.append(attend)
-
         context = {
             'attendance':attendances,
             'class':class_,
@@ -169,7 +168,7 @@ def export_users_csv(self,class_pk,subject_pk,*args,**kwargs):
     writer = csv.writer(response)
     tag = ['first_name','last_name','roll_no']
     for time in attend_.detailed_attendance.all():
-        tag.append(time.timestamp)
+        tag.append(time.timestamp.astimezone(pytz.timezone('Asia/Kolkata')))
     writer.writerow(tag)
 
     attendances = []
@@ -186,16 +185,19 @@ def export_users_csv(self,class_pk,subject_pk,*args,**kwargs):
                 absentees.append("A")
         writer.writerow(absentees)
 
-
-
-
-
-
-    
-
-
-    # students = Student.objects.all().values_list('first_name','last_name','roll_no')
-    # for student in students:
-    #     writer.writerow(student)
-
     return response
+
+
+def defaulterlist(self,class_pk,subject_pk,*args,**kwargs):
+    class_ = Class.objects.get(pk = class_pk)
+    subject = Subject.objects.get(pk = subject_pk)
+    defaulters = []
+
+    for student in class_.students.all():
+        attendance  = Attendance.objects.get(student=student,subject=subject)
+        if attendance.is_defaulter(): 
+            defaulters.append(attendance)
+        
+    print(defaulters)
+    return redirect("detailed-attendance", class_pk,subject_pk)
+

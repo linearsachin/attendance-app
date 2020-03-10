@@ -9,7 +9,6 @@
                         {% for time in last_attendance.detailed_attendance.all %}
                                 <th>{{time.timestamp}}</th>
                         {% endfor %}
-
                     </tr>
             {% for student in attendance %}
                   
@@ -21,9 +20,9 @@
                     
                     {% for day in student.detailed_attendance.all  %}
                             {% if day.present %}
-                                <td>Present</td>
+                                <td bgcolor="#66ff33">Present</td>
                             {% else %}
-                                <td>Absent</td>
+                                <td bgcolor="#ff0000">Absent</td>
                             {% endif %}
                     {% endfor %}
                 </tr> 
