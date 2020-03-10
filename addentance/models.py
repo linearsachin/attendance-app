@@ -61,7 +61,7 @@ class AttendanceTimestamp(models.Model):
 
 class Attendance(models.Model):
     student  = models.ForeignKey('Student',on_delete=models.CASCADE,blank=True, null=True)
-    subject = models.ForeignKey('Subject',on_delete=models.CASCADE,blank=True, null=True)
+    subject = models.ForeignKey('Subject',on_delete=models.SET_NULL,blank=True, null=True)
     detailed_attendance = models.ManyToManyField('AttendanceTimestamp',blank=True)
     not_attended = models.IntegerField(default=0)
     total = models.IntegerField(default=0)
@@ -78,10 +78,10 @@ class Attendance(models.Model):
         return round(attendance,2)
     
     def is_defaulter(self):
-        if ( (self.total - self.not_attended) / self.total )* 100  < 75:
-            return True
-        else:
-            return False
+        if self.total != 0:
+            if ( (self.total - self.not_attended) / self.total )* 100  < 75:
+                return True
+        return False
 
 
 class Student_Attendance(models.Model):

@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
-                <a href="{% url 'export_users_csv' class_pk=class.pk subject_pk=subject.pk %}">Export all users</a>
-                <table class="table table-bordered">
+                <a href="{% url 'export_users_csv' class_pk=class.pk subject_pk=subject.pk %}" class="btn btn-black" style="width:20em">Export all users</a>
+                <div class="table-responsive">
+                <table class="table table-hover">
                     <tr>
                         <th>Firstname</th>
                         <th>Lastname</th>
@@ -20,9 +21,9 @@
                     
                     {% for day in student.detailed_attendance.all  %}
                             {% if day.present %}
-                                <td bgcolor="#66ff33">Present</td>
+                                <td class="text text-success"><b>Present</b></td>
                             {% else %}
-                                <td bgcolor="#ff0000">Absent</td>
+                                <td class="text text-danger"><b>Absent</b></td>
                             {% endif %}
                     {% endfor %}
                 </tr> 
@@ -30,6 +31,7 @@
             {% endfor %}
 
                 </table>
+                </div>
 
 
 {% endblock content %}

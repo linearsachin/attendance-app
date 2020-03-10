@@ -9,8 +9,8 @@
             students:
             <form method="POST" class="">
                 {% csrf_token %}
-                <label for="lecture-time">Lecture (date and time):</label>
-                <input type="date" id="lecture-date" name="lecture-date" >
+                <label for="lecture-time" >Lecture (date and time):</label>
+                <input type="date" id="lecture-date" name="lecture-date" class="" >
                 <input type="time" id="lecture-time" name="lecture-time" >
                     <br>
 
@@ -19,7 +19,7 @@
                         <label>{{student.student.first_name}}</label><br> 
                     </input>
                 {% endfor %}
-                <button type="submit">submit</button>
+                <button type="submit" class="btn btn-black" style="width:20em">submit</button>
            </form>
     
 {% endblock content %}

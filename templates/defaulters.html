@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+            <h3>{{class.branch}} {{class.divison}}</h3>
+            <h4>{{subject.subject_name}}</h4>
+            academic year : {{class.academic_year}}<br>
+            semester : {{class.semester}}<br>
+            defaulters:
+
+            {% if  defaulters  %}
+            <table class="table table-bordered">
+                    <tr>
+                        <th>Firstname</th>
+                        <th>Lastname</th>
+                        <th>Roll No</th>
+                        <th>Attendance</th>
+
+                    </tr>
+            {% for attendance in defaulters  %}
+                    <tr>
+                        
+                        <td>{{attendance.student.first_name}}</td>
+                        <td>{{attendance.student.last_name}}</td>
+                        <td>{{attendance.student.roll_no}} </td>                
+                        <td>{{attendance.attendance}}</td>
+                        </tr>
+            {% endfor %}
+            {% else %}
+            <h6>NO DEFAULTERS </h6>
+           {% endif %}
+{% endblock content %}

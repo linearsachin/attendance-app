@@ -13,9 +13,8 @@
                     <h3>{{class.branch}} {{class.divison}}</h3>
                     academic year : {{class.academic_year}}<br>
                     semester : {{class.semester}}<br>
-                    
-                    <br> <a href = "{% url "class" pk=class.pk subject_pk=subject.subject.pk %}"> view detailed </a>
-                    <br> <a href = "{% url "mark-attendance" pk=class.pk subject_pk=subject.subject.pk %}"> mark attendance </a>
+                    <a href = "{% url "class" pk=class.pk subject_pk=subject.subject.pk %}" class="btn btn-black" style="width:20em"> view detailed </a> 
+                    <a href = "{% url "mark-attendance" pk=class.pk subject_pk=subject.subject.pk %}" class="btn btn-black"style="width:20em"> mark attendance </a>
                 {% endfor %}<br>
         </div>
         {% endfor %}

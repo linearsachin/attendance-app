@@ -27,7 +27,6 @@ class HomeView(View):
 
 class ClassView(View):
     def get(self,request,pk,subject_pk,*args,**kwargs):
-
         class_ = Class.objects.get(pk= pk)
         teacher = Teacher.objects.get(user= request.user)
         subject = Subject.objects.get(pk=subject_pk)
@@ -87,7 +86,9 @@ class MarkAttendanceView(View):
         lists=request.POST.getlist('attendance-absent-set')
         lecture_date = request.POST.get('lecture-date')
         lecture_time = request.POST.get('lecture-time')
+        print(lecture_time)
         lecture_datetime1 = lecture_date + ' '+ lecture_time
+        print(lecture_datetime1)
         lecture_datetime=datetime.datetime.strptime(lecture_datetime1,'%Y-%m-%d %H:%M')
         subject = Subject.objects.get(pk=subject_pk)
         for student_pk in lists:
@@ -130,7 +131,24 @@ class MarkAttendanceView(View):
         
             
         return redirect('detailed-attendance',pk,subject_pk )
- 
+
+class Defaulters(View):
+    def get(self,request,class_pk,subject_pk,*args,**kwargs):
+        class_ = Class.objects.get(pk = class_pk)
+        subject = Subject.objects.get(pk = subject_pk)
+        defaulters = []
+
+        for student in class_.students.all():
+            attendance  = Attendance.objects.get(student=student,subject=subject)
+            if attendance.is_defaulter(): 
+                defaulters.append(attendance)
+        context = {
+            'class':class_,
+            'subject':subject,
+            'defaulters':defaulters,
+        }
+        return render(request,"defaulters.html",context )
+    
 
 class DetailedAttendance(View):
     def get(self,request,class_pk,subject_pk,*args,**kwargs):
@@ -140,6 +158,13 @@ class DetailedAttendance(View):
         for student in class_.students.all():
             attend = Attendance.objects.get(student =student,subject=subject)
             attendances.append(attend)
+        # attend_count=[]
+        # for time in attend.detailed_attendance.all():
+        #     qs = AttendanceTimestamp.objects.filter(subject=subject,timestamp=(time.timestamp) , present=True)
+        #     listlen = len(qs)
+        #     attend_count.append(listlen)
+        # print(attend_count)
+        # print(attendances)
         context = {
             'attendance':attendances,
             'class':class_,
@@ -188,16 +213,5 @@ def export_users_csv(self,class_pk,subject_pk,*args,**kwargs):
     return response
 
 
-def defaulterlist(self,class_pk,subject_pk,*args,**kwargs):
-    class_ = Class.objects.get(pk = class_pk)
-    subject = Subject.objects.get(pk = subject_pk)
-    defaulters = []
 
-    for student in class_.students.all():
-        attendance  = Attendance.objects.get(student=student,subject=subject)
-        if attendance.is_defaulter(): 
-            defaulters.append(attendance)
-        
-    print(defaulters)
-    return redirect("detailed-attendance", class_pk,subject_pk)
 
