@@ -11,9 +11,6 @@ class Branch(models.Model):
     def __str__(self):
         return self.branch_name
     
-
-
-
 class Subject(models.Model):
     subject_name = models.CharField(max_length = 100)
     subject_abbr = models.CharField(max_length = 5)
@@ -109,7 +106,8 @@ class Class(models.Model):
     students = models.ManyToManyField('Student')
 
     def __str__(self):
-        return self.branch.branch_name
+        return f"{self.branch.branch_abr} {self.division} of semester {self.semester}"
+
 
 
 
