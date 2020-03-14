@@ -17,8 +17,6 @@
                     <td>{{student.student.first_name}}</td>
                     <td>{{student.student.last_name}}</td>
                     <td>{{student.student.roll_no}}</td>
-                
-                    
                     {% for day in student.detailed_attendance.all  %}
                             {% if day.present %}
                                 <td class="text text-success"><b>Present</b></td>

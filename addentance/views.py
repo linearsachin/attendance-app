@@ -5,11 +5,41 @@ from django.utils import timezone
 import pytz
 import csv
 from django.http import HttpResponse
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 
 
 from .models import Teacher , Class,Attendance,Student_Attendance,Teacher_Detail,Subject,Student,AttendanceTimestamp
 # Create your views here.
-class HomeView(View):
+
+
+# class TeacherCheck(View):
+
+#     def __init__(self, pk,subject_pk,user):
+#         self.pk = pk
+#         self.subject_pk=subject_pk
+#         self.user=user
+
+        
+#     class_ = Class.objects.get(pk= pk)
+#     teacher = Teacher.objects.get(user= user)
+#     subject = Subject.objects.get(pk=subject_pk)
+#     teacher_dets  = Teacher_Detail.objects.get(teacher=teacher, subject=subject)
+
+#     def is_underteacher(self):
+#         if self.teacher_dets is not None:
+#             for class__ in self.teacher_dets.classes.all():
+#                 if self.class_==class__:
+#                     class_= class__
+#                     return True
+#                 else:
+#                     return False #render a error 404 not found template
+
+# class CheckView(view,TeacherCheck):
+#     def get(self,request,*args,**kwargs):
+#         super().__init__(pk,subject_pk,user)
+
+class HomeView(LoginRequiredMixin,View):
     def get(self,request,*args,**kwargs):
         try : 
             teacher = Teacher.objects.get(user= request.user)
@@ -25,21 +55,14 @@ class HomeView(View):
         return render(request , "home.html", context)
 
 
-class ClassView(View):
+class ClassView(LoginRequiredMixin,View):
     def get(self,request,pk,subject_pk,*args,**kwargs):
         class_ = Class.objects.get(pk= pk)
+        print(class_)
         teacher = Teacher.objects.get(user= request.user)
         subject = Subject.objects.get(pk=subject_pk)
-        try:
-            teacher_dets  = Teacher_Detail.objects.get(teacher=teacher, subject=subject)
-
-        except:
-            teacher_dets = None
-        
-        if teacher_dets is not None:
-            for class__ in teacher_dets.classes.all():
-                if class_==class__:
-                    class_= class__
+    
+        if checkTeacher(class_,teacher,subject):
             student_attendance = Student_Attendance.objects.filter(class_s = class_)
             context = {
                 'subject_pk' : int(subject_pk),
@@ -52,21 +75,13 @@ class ClassView(View):
             return redirect('home')
         
 
-class MarkAttendanceView(View):
+class MarkAttendanceView(LoginRequiredMixin,View):
     def get(self,request,pk,subject_pk,*args,**kwargs):
         class_ = Class.objects.get(pk= pk)
         teacher = Teacher.objects.get(user= request.user)
         subject = Subject.objects.get(pk=subject_pk)
-        try:
-            teacher_dets  = Teacher_Detail.objects.get(teacher=teacher, subject=subject)
-
-        except:
-            teacher_dets = None
         
-        if teacher_dets is not None:
-            for class__ in teacher_dets.classes.all():
-                if class_==class__:
-                    class_= class__
+        if checkTeacher(class_,teacher,subject):
             attendance = []
             for student in class_.students.all():
                 attendance1 = Attendance.objects.get(student = student, subject=subject)
@@ -132,53 +147,70 @@ class MarkAttendanceView(View):
             
         return redirect('detailed-attendance',pk,subject_pk )
 
-class Defaulters(View):
+class Defaulters(LoginRequiredMixin,View):
     def get(self,request,class_pk,subject_pk,*args,**kwargs):
         class_ = Class.objects.get(pk = class_pk)
-        subject = Subject.objects.get(pk = subject_pk)
-        defaulters = []
+        teacher = Teacher.objects.get(user= request.user)
+        subject = Subject.objects.get(pk=subject_pk)
+        
+        if checkTeacher(class_,teacher,subject):
 
-        for student in class_.students.all():
-            attendance  = Attendance.objects.get(student=student,subject=subject)
-            if attendance.is_defaulter(): 
-                defaulters.append(attendance)
-        context = {
-            'class':class_,
-            'subject':subject,
-            'defaulters':defaulters,
-        }
-        return render(request,"defaulters.html",context )
+            defaulters = []
+
+            for student in class_.students.all():
+                attendance  = Attendance.objects.get(student=student,subject=subject)
+                if attendance.is_defaulter(): 
+                    defaulters.append(attendance)
+            context = {
+                'class':class_,
+                'subject':subject,
+                'defaulters':defaulters,
+            }
+            return render(request,"defaulters.html",context)
+        else:
+            return redirect('home')
     
 
-class DetailedAttendance(View):
+class DetailedAttendance(LoginRequiredMixin,View):
     def get(self,request,class_pk,subject_pk,*args,**kwargs):
         class_ = Class.objects.get(pk=class_pk)
-        subject = Subject.objects.get(pk=subject_pk) 
-        attendances = []
-        for student in class_.students.all():
-            attend = Attendance.objects.get(student =student,subject=subject)
-            attendances.append(attend)
-        # attend_count=[]
-        # for time in attend.detailed_attendance.all():
-        #     qs = AttendanceTimestamp.objects.filter(subject=subject,timestamp=(time.timestamp) , present=True)
-        #     listlen = len(qs)
-        #     attend_count.append(listlen)
-        # print(attend_count)
-        # print(attendances)
-        context = {
-            'attendance':attendances,
-            'class':class_,
-            'subject':subject,
-            'last_attendance':attend,
+        teacher = Teacher.objects.get(user= request.user)
+        subject = Subject.objects.get(pk=subject_pk)
+        
+        if checkTeacher(class_,teacher,subject):
+            attendances = []
+            for student in class_.students.all():
+                attend = Attendance.objects.get(student =student,subject=subject)
+                attendances.append(attend)
+    
+            context = {
+                'attendance':attendances,
+                'class':class_,
+                'subject':subject,
+                'last_attendance':attend,
 
-        }
-        return render(request,"detailed_atendance.html", context)
-
+            }
+            return render(request,"detailed_atendance.html", context)
+        else:
+            return redirect('home') #render a error 404 not found template
 
 
+def checkTeacher(class_,teacher,subject):
+        try:
+            teacher_dets  = Teacher_Detail.objects.get(teacher=teacher, subject=subject)
+
+        except:
+            teacher_dets = None
+        
+        if teacher_dets is not None:
+            for class__ in teacher_dets.classes.all():
+                if class_==class__:
+                        return True
+        return False
 
 
 
+@login_required 
 def export_users_csv(self,class_pk,subject_pk,*args,**kwargs):
     class_ = Class.objects.get(pk=int(class_pk))
     subject = Subject.objects.get(pk=subject_pk) 

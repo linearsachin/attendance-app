@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+{% load crispy_forms_tags %}
 <html>
   <head>
     <title>{% block head_title %}{% endblock %}</title>
@@ -77,8 +78,10 @@
     </div>
     {% block content %}
     {% endblock %}
-    {% endblock %}
+    
     {% block extra_body %}
     {% endblock %}
+    {% endblock %}
+    
   </body>
 </html>
