@@ -21,6 +21,18 @@ class AttendanceAdmin(admin.ModelAdmin):
     def set_total_0(self, request, queryset):
         queryset.update(total=0,not_attended = 0)
 
+class TeacherAdmin(admin.ModelAdmin):
+    list_display = ('teacher','subject')
+    actions = ['create_attendance', ]
+    def create_attendance(self,request,queryset):
+        for teacher in queryset:
+            for class_ in teacher.classes.all():
+                for student in class_.students.all():
+                    Attendance.objects.create(
+                        student=student,
+                        subject=teacher.subject,
+                    )
+
 
 admin.site.register(Branch)
 admin.site.register(Subject)
@@ -29,5 +41,5 @@ admin.site.register(Student)
 admin.site.register(Class)
 admin.site.register(Teacher)
 admin.site.register(Student_Attendance)
-admin.site.register(Teacher_Detail)
+admin.site.register(Teacher_Detail,TeacherAdmin)
 admin.site.register(AttendanceTimestamp)
