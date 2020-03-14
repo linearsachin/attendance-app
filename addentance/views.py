@@ -10,34 +10,20 @@ from django.contrib.auth.decorators import login_required
 
 
 from .models import Teacher , Class,Attendance,Student_Attendance,Teacher_Detail,Subject,Student,AttendanceTimestamp
-# Create your views here.
 
+def isTeacher(class_,teacher,subject):
+        try:
+            teacher_dets  = Teacher_Detail.objects.get(teacher=teacher, subject=subject)
 
-# class TeacherCheck(View):
-
-#     def __init__(self, pk,subject_pk,user):
-#         self.pk = pk
-#         self.subject_pk=subject_pk
-#         self.user=user
-
+        except:
+            teacher_dets = None
         
-#     class_ = Class.objects.get(pk= pk)
-#     teacher = Teacher.objects.get(user= user)
-#     subject = Subject.objects.get(pk=subject_pk)
-#     teacher_dets  = Teacher_Detail.objects.get(teacher=teacher, subject=subject)
+        if teacher_dets is not None:
+            for class__ in teacher_dets.classes.all():
+                if class_==class__:
+                        return True
+        return False
 
-#     def is_underteacher(self):
-#         if self.teacher_dets is not None:
-#             for class__ in self.teacher_dets.classes.all():
-#                 if self.class_==class__:
-#                     class_= class__
-#                     return True
-#                 else:
-#                     return False #render a error 404 not found template
-
-# class CheckView(view,TeacherCheck):
-#     def get(self,request,*args,**kwargs):
-#         super().__init__(pk,subject_pk,user)
 
 class HomeView(LoginRequiredMixin,View):
     def get(self,request,*args,**kwargs):
@@ -62,7 +48,7 @@ class ClassView(LoginRequiredMixin,View):
         teacher = Teacher.objects.get(user= request.user)
         subject = Subject.objects.get(pk=subject_pk)
     
-        if checkTeacher(class_,teacher,subject):
+        if isTeacher(class_,teacher,subject):
             student_attendance = Student_Attendance.objects.filter(class_s = class_)
             context = {
                 'subject_pk' : int(subject_pk),
@@ -81,7 +67,7 @@ class MarkAttendanceView(LoginRequiredMixin,View):
         teacher = Teacher.objects.get(user= request.user)
         subject = Subject.objects.get(pk=subject_pk)
         
-        if checkTeacher(class_,teacher,subject):
+        if isTeacher(class_,teacher,subject):
             attendance = []
             for student in class_.students.all():
                 attendance1 = Attendance.objects.get(student = student, subject=subject)
@@ -153,7 +139,7 @@ class Defaulters(LoginRequiredMixin,View):
         teacher = Teacher.objects.get(user= request.user)
         subject = Subject.objects.get(pk=subject_pk)
         
-        if checkTeacher(class_,teacher,subject):
+        if isTeacher(class_,teacher,subject):
 
             defaulters = []
 
@@ -177,7 +163,7 @@ class DetailedAttendance(LoginRequiredMixin,View):
         teacher = Teacher.objects.get(user= request.user)
         subject = Subject.objects.get(pk=subject_pk)
         
-        if checkTeacher(class_,teacher,subject):
+        if isTeacher(class_,teacher,subject):
             attendances = []
             for student in class_.students.all():
                 attend = Attendance.objects.get(student =student,subject=subject)
@@ -195,18 +181,6 @@ class DetailedAttendance(LoginRequiredMixin,View):
             return redirect('home') #render a error 404 not found template
 
 
-def checkTeacher(class_,teacher,subject):
-        try:
-            teacher_dets  = Teacher_Detail.objects.get(teacher=teacher, subject=subject)
-
-        except:
-            teacher_dets = None
-        
-        if teacher_dets is not None:
-            for class__ in teacher_dets.classes.all():
-                if class_==class__:
-                        return True
-        return False
 
 
 
