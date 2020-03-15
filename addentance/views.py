@@ -44,7 +44,6 @@ class HomeView(LoginRequiredMixin,View):
 class ClassView(LoginRequiredMixin,View):
     def get(self,request,pk,subject_pk,*args,**kwargs):
         class_ = Class.objects.get(pk= pk)
-        print(class_)
         teacher = Teacher.objects.get(user= request.user)
         subject = Subject.objects.get(pk=subject_pk)
     
@@ -87,9 +86,7 @@ class MarkAttendanceView(LoginRequiredMixin,View):
         lists=request.POST.getlist('attendance-absent-set')
         lecture_date = request.POST.get('lecture-date')
         lecture_time = request.POST.get('lecture-time')
-        print(lecture_time)
         lecture_datetime1 = lecture_date + ' '+ lecture_time
-        print(lecture_datetime1)
         lecture_datetime=datetime.datetime.strptime(lecture_datetime1,'%Y-%m-%d %H:%M')
         subject = Subject.objects.get(pk=subject_pk)
         for student_pk in lists:

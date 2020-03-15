@@ -1,0 +1,11 @@
+<nav class="nav nav-fill">
+          {% if user.is_authenticated %}
+          <div><a href="{% url 'account_email' %}">Change E-mail</a></div>
+          <div><a href="{% url 'account_logout' %}">Sign Out</a></div>
+          {% else %}
+          <div><a href="{% url 'account_login' %}">Sign In</a></div>
+          <div><a href="{% url 'account_signup' %}">Sign Up</a></div>
+          {% endif %}
+
+
+</nav>

@@ -15,14 +15,15 @@ AttendanceTimestamp,
 
 class AttendanceAdmin(admin.ModelAdmin):
 
-    list_display = ('student','not_attended','total')
+    list_display = ('student','subject','not_attended','total')
+    list_filter = ['student']
     actions = ['set_total_0', ]
 
     def set_total_0(self, request, queryset):
         queryset.update(total=0,not_attended = 0)
 
 class TeacherAdmin(admin.ModelAdmin):
-    list_display = ('teacher','subject')
+    list_display = ('teacher','subject',)
     actions = ['create_attendance', ]
     def create_attendance(self,request,queryset):
         for teacher in queryset:
