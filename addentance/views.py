@@ -46,9 +46,10 @@ class ClassView(LoginRequiredMixin,View):
         class_ = Class.objects.get(pk= pk)
         teacher = Teacher.objects.get(user= request.user)
         subject = Subject.objects.get(pk=subject_pk)
-    
+
         if isTeacher(class_,teacher,subject):
             student_attendance = Student_Attendance.objects.filter(class_s = class_)
+            print(student_attendance)
             context = {
                 'subject_pk' : int(subject_pk),
                 'subject':subject,
@@ -129,6 +130,16 @@ class MarkAttendanceView(LoginRequiredMixin,View):
         
             
         return redirect('detailed-attendance',pk,subject_pk )
+
+def changeAttendance(self,class_pk,subject_pk,attend_pk):
+    attendanceTime = AttendanceTimestamp.objects.get(pk = attend_pk)
+    if attendanceTime.present:
+        attendanceTime.present=False
+    else:
+        attendanceTime.present=True
+    attendanceTime.save()
+    return redirect('detailed-attendance',class_pk,subject_pk,)
+
 
 class Defaulters(LoginRequiredMixin,View):
     def get(self,request,class_pk,subject_pk,*args,**kwargs):

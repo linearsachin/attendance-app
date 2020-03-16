@@ -19,9 +19,9 @@
                     <td>{{student.student.roll_no}}</td>
                     {% for day in student.detailed_attendance.all  %}
                             {% if day.present %}
-                                <td class="text text-success"><b>Present</b></td>
+                                <td ><a href="{% url 'change-attendance' class_pk=class.pk subject_pk=subject.pk attend_pk=day.pk%}" class="text text-success"><b>Present</b></a></td>
                             {% else %}
-                                <td class="text text-danger"><b>Absent</b></td>
+                                <td> <a href="{% url 'change-attendance'  class_pk=class.pk subject_pk=subject.pk attend_pk=day.pk%}" class="text text-danger" ><b>Absent</b></a></td>
                             {% endif %}
                     {% endfor %}
                 </tr> 

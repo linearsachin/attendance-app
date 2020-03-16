@@ -33,6 +33,11 @@ class TeacherAdmin(admin.ModelAdmin):
                         student=student,
                         subject=teacher.subject,
                     )
+                    attendance =Attendance.objects.get(student=student,subject=teacher.subject)
+                    student_attend = Student_Attendance.objects.get(student=student)
+                    student_attend.attendance.add(attendance)
+                    student_attend.save()
+
 
 
 admin.site.register(Branch)
