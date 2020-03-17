@@ -7,14 +7,15 @@ import csv
 from django.http import HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
-
-
 from .models import Teacher , Class,Attendance,Student_Attendance,Teacher_Detail,Subject,Student,AttendanceTimestamp
 
 def isTeacher(class_,teacher,subject):
+        '''
+        This function checks if the teacher is assigned to the particular class
+        it takes a Class object, a Subject object and a Teacher object (models)
+        '''
         try:
-            teacher_dets  = Teacher_Detail.objects.get(teacher=teacher, subject=subject)
-
+            teacher_dets  = Teacher_Detail.objects.get(teacher=teacher, subject=subject) #getting the specific teacher detail
         except:
             teacher_dets = None
         
@@ -27,12 +28,16 @@ def isTeacher(class_,teacher,subject):
 
 class HomeView(LoginRequiredMixin,View):
     def get(self,request,*args,**kwargs):
+        '''
+        renders a home page for teachers with listing all the classes assigned to them
+        '''
         try : 
             teacher = Teacher.objects.get(user= request.user)
-            
+            teacher_dets =  Teacher_Detail.objects.filter(teacher=teacher)
         except:
             teacher = None
-        teacher_dets =  Teacher_Detail.objects.filter(teacher=teacher)
+            return render()
+        
 
         context = {
             'teacher' : teacher,
@@ -43,13 +48,16 @@ class HomeView(LoginRequiredMixin,View):
 
 class ClassView(LoginRequiredMixin,View):
     def get(self,request,pk,subject_pk,*args,**kwargs):
+        '''
+        class view which takes 2 essential arguments: pk (class pk), subject_pk
+        and it renders a table for every student with their attendance percentage and other details
+        '''
         class_ = Class.objects.get(pk= pk)
         teacher = Teacher.objects.get(user= request.user)
         subject = Subject.objects.get(pk=subject_pk)
 
         if isTeacher(class_,teacher,subject):
             student_attendance = Student_Attendance.objects.filter(class_s = class_)
-            print(student_attendance)
             context = {
                 'subject_pk' : int(subject_pk),
                 'subject':subject,
@@ -62,6 +70,13 @@ class ClassView(LoginRequiredMixin,View):
         
 
 class MarkAttendanceView(LoginRequiredMixin,View):
+    '''
+    the most important function of this app
+    this page is for marking attendance 
+    it takes a class with the assigned teacher(user) and renders a list of student in the class (checkboxes)
+    first select the date and time of the lecture and then
+    you just have to select the student which are absent and submit the response
+    '''
     def get(self,request,pk,subject_pk,*args,**kwargs):
         class_ = Class.objects.get(pk= pk)
         teacher = Teacher.objects.get(user= request.user)
@@ -73,7 +88,6 @@ class MarkAttendanceView(LoginRequiredMixin,View):
                 attendance1 = Attendance.objects.get(student = student, subject=subject)
                 attendance.append(attendance1)
             context = {
-
                 'subject':subject,
                 'students':attendance,
                 'class':class_,
@@ -83,15 +97,19 @@ class MarkAttendanceView(LoginRequiredMixin,View):
             return redirect('home')
 
     def post(self,request,pk,subject_pk,*args, **kwargs):
-        _class_ =  Class.objects.get(pk = pk)
-        lists=request.POST.getlist('attendance-absent-set')
-        lecture_date = request.POST.get('lecture-date')
-        lecture_time = request.POST.get('lecture-time')
-        lecture_datetime1 = lecture_date + ' '+ lecture_time
-        lecture_datetime=datetime.datetime.strptime(lecture_datetime1,'%Y-%m-%d %H:%M')
-        subject = Subject.objects.get(pk=subject_pk)
-        for student_pk in lists:
-
+        _class_ =  Class.objects.get(pk = pk) #getting Class object
+        lists=request.POST.getlist('attendance-absent-set') # list of absent students
+        lecture_date = request.POST.get('lecture-date') # getting the date of lecture 
+        lecture_time = request.POST.get('lecture-time') # getting the time of lecture
+        lecture_datetime1 = lecture_date + ' '+ lecture_time  
+        lecture_datetime=datetime.datetime.strptime(lecture_datetime1,'%Y-%m-%d %H:%M') # converting the str into datetime object
+        subject = Subject.objects.get(pk=subject_pk) #Subject object
+        for student_pk in lists: 
+            '''
+            looping through the absent student list and creating 
+            an AttendanceTimestamp object for the particular student
+            marking them ABSENT
+            '''
             student = Student.objects.get(pk = student_pk)
             AttendanceTimestamp.objects.create(
                 student = student,
@@ -111,6 +129,11 @@ class MarkAttendanceView(LoginRequiredMixin,View):
             attend.not_attended +=1
             attend.save()
         for student in _class_.students.all():
+            '''
+            looping through the students not in the  list and creating 
+            an AttendanceTimestamp object for the particular student
+            marking them PRESENT
+            '''
             if str(student.pk) not in lists:
                 AttendanceTimestamp.objects.create(
                 student = student,
@@ -126,12 +149,12 @@ class MarkAttendanceView(LoginRequiredMixin,View):
                 attend.detailed_attendance.add(attendtime)
                 attend.total += 1
                 attend.save()
-
-        
-            
         return redirect('detailed-attendance',pk,subject_pk )
 
 def changeAttendance(self,class_pk,subject_pk,attend_pk):
+    '''
+    changing a specific attendance with a click from present to absent and vice versa (AttendanceTimestamp)
+    '''
     attendanceTime = AttendanceTimestamp.objects.get(pk = attend_pk)
     if attendanceTime.present:
         attendanceTime.present=False
@@ -142,6 +165,10 @@ def changeAttendance(self,class_pk,subject_pk,attend_pk):
 
 
 class Defaulters(LoginRequiredMixin,View):
+    '''
+    creates a list(table) of students having attendance less than 75% ( variable in future updates)
+    with their details
+    '''
     def get(self,request,class_pk,subject_pk,*args,**kwargs):
         class_ = Class.objects.get(pk = class_pk)
         teacher = Teacher.objects.get(user= request.user)
@@ -166,6 +193,9 @@ class Defaulters(LoginRequiredMixin,View):
     
 
 class DetailedAttendance(LoginRequiredMixin,View):
+    '''
+    renders a page based according to specific class with all the details with time and date
+    '''
     def get(self,request,class_pk,subject_pk,*args,**kwargs):
         class_ = Class.objects.get(pk=class_pk)
         teacher = Teacher.objects.get(user= request.user)
@@ -194,6 +224,9 @@ class DetailedAttendance(LoginRequiredMixin,View):
 
 @login_required 
 def export_users_csv(self,class_pk,subject_pk,*args,**kwargs):
+    '''
+    exports data into CSV of specific class with attendance
+    '''
     class_ = Class.objects.get(pk=int(class_pk))
     subject = Subject.objects.get(pk=subject_pk) 
     attendances = []

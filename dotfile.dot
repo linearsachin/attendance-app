@@ -1,6 +1,6 @@
 digraph model_graph {
   // Dotfile by Django-Extensions graph_models
-  // Created: 2020-02-21 19:03
+  // Created: 2020-03-17 22:10
   // Cli Options: -a
 
   fontname = "Roboto"
@@ -567,6 +567,140 @@ digraph model_graph {
     </TABLE>
     >]
 
+  addentance_models_Teacher [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    Teacher
+    </B></FONT></TD></TR>
+  
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Roboto"><B>id</B></FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Roboto"><B>AutoField</B></FONT>
+    </TD></TR>
+  
+  
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT COLOR="#7B7B7B" FACE="Roboto"><B>user</B></FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT COLOR="#7B7B7B" FACE="Roboto"><B>ForeignKey (id)</B></FONT>
+    </TD></TR>
+  
+  
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Roboto">faculty_id</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Roboto">CharField</FONT>
+    </TD></TR>
+  
+  
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Roboto">first_name</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Roboto">CharField</FONT>
+    </TD></TR>
+  
+  
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Roboto">last_name</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Roboto">CharField</FONT>
+    </TD></TR>
+  
+  
+    </TABLE>
+    >]
+
+  addentance_models_Teacher_Detail [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    Teacher_Detail
+    </B></FONT></TD></TR>
+  
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Roboto"><B>id</B></FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Roboto"><B>AutoField</B></FONT>
+    </TD></TR>
+  
+  
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT COLOR="#7B7B7B" FACE="Roboto"><B>subject</B></FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT COLOR="#7B7B7B" FACE="Roboto"><B>ForeignKey (id)</B></FONT>
+    </TD></TR>
+  
+  
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT COLOR="#7B7B7B" FACE="Roboto"><B>teacher</B></FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT COLOR="#7B7B7B" FACE="Roboto"><B>ForeignKey (id)</B></FONT>
+    </TD></TR>
+  
+  
+    </TABLE>
+    >]
+
+  addentance_models_AttendanceTimestamp [label=<
+    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+    AttendanceTimestamp
+    </B></FONT></TD></TR>
+  
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Roboto"><B>id</B></FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Roboto"><B>AutoField</B></FONT>
+    </TD></TR>
+  
+  
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT COLOR="#7B7B7B" FACE="Roboto"><B>student</B></FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT COLOR="#7B7B7B" FACE="Roboto"><B>ForeignKey (id)</B></FONT>
+    </TD></TR>
+  
+  
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT COLOR="#7B7B7B" FACE="Roboto"><B>subject</B></FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT COLOR="#7B7B7B" FACE="Roboto"><B>ForeignKey (id)</B></FONT>
+    </TD></TR>
+  
+  
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Roboto">present</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Roboto">BooleanField</FONT>
+    </TD></TR>
+  
+  
+  
+    <TR><TD ALIGN="LEFT" BORDER="0">
+    <FONT FACE="Roboto">timestamp</FONT>
+    </TD><TD ALIGN="LEFT">
+    <FONT FACE="Roboto">DateTimeField</FONT>
+    </TD></TR>
+  
+  
+    </TABLE>
+    >]
+
   addentance_models_Attendance [label=<
     <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
     <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
@@ -600,7 +734,7 @@ digraph model_graph {
   
   
     <TR><TD ALIGN="LEFT" BORDER="0">
-    <FONT FACE="Roboto">attended</FONT>
+    <FONT FACE="Roboto">not_attended</FONT>
     </TD><TD ALIGN="LEFT">
     <FONT FACE="Roboto">IntegerField</FONT>
     </TD></TR>
@@ -695,56 +829,6 @@ digraph model_graph {
     <FONT FACE="Roboto">semester</FONT>
     </TD><TD ALIGN="LEFT">
     <FONT FACE="Roboto">PositiveIntegerField</FONT>
-    </TD></TR>
-  
-  
-    </TABLE>
-    >]
-
-  addentance_models_Teacher [label=<
-    <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
-    <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
-    <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
-    Teacher
-    </B></FONT></TD></TR>
-  
-  
-    <TR><TD ALIGN="LEFT" BORDER="0">
-    <FONT FACE="Roboto"><B>id</B></FONT>
-    </TD><TD ALIGN="LEFT">
-    <FONT FACE="Roboto"><B>AutoField</B></FONT>
-    </TD></TR>
-  
-  
-  
-    <TR><TD ALIGN="LEFT" BORDER="0">
-    <FONT COLOR="#7B7B7B" FACE="Roboto"><B>user</B></FONT>
-    </TD><TD ALIGN="LEFT">
-    <FONT COLOR="#7B7B7B" FACE="Roboto"><B>ForeignKey (id)</B></FONT>
-    </TD></TR>
-  
-  
-  
-    <TR><TD ALIGN="LEFT" BORDER="0">
-    <FONT FACE="Roboto">faculty_id</FONT>
-    </TD><TD ALIGN="LEFT">
-    <FONT FACE="Roboto">CharField</FONT>
-    </TD></TR>
-  
-  
-  
-    <TR><TD ALIGN="LEFT" BORDER="0">
-    <FONT FACE="Roboto">first_name</FONT>
-    </TD><TD ALIGN="LEFT">
-    <FONT FACE="Roboto">CharField</FONT>
-    </TD></TR>
-  
-  
-  
-    <TR><TD ALIGN="LEFT" BORDER="0">
-    <FONT FACE="Roboto">last_name</FONT>
-    </TD><TD ALIGN="LEFT">
-    <FONT FACE="Roboto">CharField</FONT>
     </TD></TR>
   
   
@@ -943,9 +1027,9 @@ digraph model_graph {
   
   
     <TR><TD ALIGN="LEFT" BORDER="0">
-    <FONT COLOR="#7B7B7B" FACE="Roboto">secret</FONT>
+    <FONT FACE="Roboto">secret</FONT>
     </TD><TD ALIGN="LEFT">
-    <FONT COLOR="#7B7B7B" FACE="Roboto">CharField</FONT>
+    <FONT FACE="Roboto">CharField</FONT>
     </TD></TR>
   
   
@@ -1127,11 +1211,32 @@ digraph model_graph {
   [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
 
 
+  addentance_models_Teacher -> django_contrib_auth_models_User
+  [label=" user (teacher)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  addentance_models_Teacher_Detail -> addentance_models_Teacher
+  [label=" teacher (teacher_detail)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  addentance_models_Teacher_Detail -> addentance_models_Subject
+  [label=" subject (teacher_detail)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  addentance_models_Teacher_Detail -> addentance_models_Class
+  [label=" classes (teacher_detail)"] [arrowhead=dot arrowtail=dot, dir=both];
+
+  addentance_models_AttendanceTimestamp -> addentance_models_Student
+  [label=" student (attendancetimestamp)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  addentance_models_AttendanceTimestamp -> addentance_models_Subject
+  [label=" subject (attendancetimestamp)"] [arrowhead=none, arrowtail=dot, dir=both];
+
   addentance_models_Attendance -> addentance_models_Student
   [label=" student (attendance)"] [arrowhead=none, arrowtail=dot, dir=both];
 
   addentance_models_Attendance -> addentance_models_Subject
   [label=" subject (attendance)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  addentance_models_Attendance -> addentance_models_AttendanceTimestamp
+  [label=" detailed_attendance (attendance)"] [arrowhead=dot arrowtail=dot, dir=both];
 
   addentance_models_Student_Attendance -> addentance_models_Student
   [label=" student (student_attendance)"] [arrowhead=none, arrowtail=dot, dir=both];
@@ -1147,15 +1252,6 @@ digraph model_graph {
 
   addentance_models_Class -> addentance_models_Student
   [label=" students (class)"] [arrowhead=dot arrowtail=dot, dir=both];
-
-  addentance_models_Teacher -> django_contrib_auth_models_User
-  [label=" user (teacher)"] [arrowhead=none, arrowtail=dot, dir=both];
-
-  addentance_models_Teacher -> addentance_models_Class
-  [label=" classes (teacher)"] [arrowhead=dot arrowtail=dot, dir=both];
-
-  addentance_models_Teacher -> addentance_models_Subject
-  [label=" subject (teacher)"] [arrowhead=dot arrowtail=dot, dir=both];
 
 
 

@@ -39,7 +39,6 @@ class TeacherAdmin(admin.ModelAdmin):
                     student_attend.save()
 
 
-
 admin.site.register(Branch)
 admin.site.register(Subject)
 admin.site.register(Attendance,AttendanceAdmin)
