@@ -138,12 +138,12 @@ class MarkAttendanceView(LoginRequiredMixin,View):
                 AttendanceTimestamp.objects.create(
                 student = student,
                 subject= subject,
-                timestamp = (lecture_datetime),
+                    timestamp = (lecture_datetime),
                 )
                 attendtime = AttendanceTimestamp.objects.get(
-                student = student,
-                subject= subject,
-                timestamp = (lecture_datetime)
+                    student = student,
+                    subject= subject,
+                    timestamp = (lecture_datetime)
                 )
                 attend = Attendance.objects.get(student= student,subject=subject)
                 attend.detailed_attendance.add(attendtime)
@@ -156,10 +156,15 @@ def changeAttendance(self,class_pk,subject_pk,attend_pk):
     changing a specific attendance with a click from present to absent and vice versa (AttendanceTimestamp)
     '''
     attendanceTime = AttendanceTimestamp.objects.get(pk = attend_pk)
+    attendance_history = Attendance.objects.get(detailed_attendance= attendanceTime)
+    print(attendance_history)
     if attendanceTime.present:
+        attendance_history.not_attended+=1
         attendanceTime.present=False
     else:
         attendanceTime.present=True
+        attendance_history.not_attended-=1
+    attendance_history.save()
     attendanceTime.save()
     return redirect('detailed-attendance',class_pk,subject_pk,)
 
